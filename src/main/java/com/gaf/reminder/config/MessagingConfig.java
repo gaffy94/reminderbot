@@ -1,5 +1,7 @@
 package com.gaf.reminder.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gaf.reminder.properties.MentionQueueProperties;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
@@ -38,8 +40,15 @@ public class MessagingConfig {
     }
 
     @Bean
-    public MessageConverter converter() {
-        return new Jackson2JsonMessageConverter();
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
+
+    @Bean
+    public MessageConverter converter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
     }
 
     @Bean

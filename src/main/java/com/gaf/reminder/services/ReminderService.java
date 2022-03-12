@@ -4,10 +4,12 @@ import com.gaf.reminder.bot.Bot;
 import com.gaf.reminder.models.ReminderInstruction;
 import com.gaf.reminder.properties.BotMessages;
 import com.gaf.reminder.util.HandleUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import twitter4j.Status;
 
 @Service
+@Slf4j
 public class ReminderService {
 
     private final MessageProcessor messageProcessor;
@@ -27,13 +29,16 @@ public class ReminderService {
         ReminderInstruction reminderInstruction = messageProcessor.processMessage(status);
         if (reminderInstruction.isValid()) {
             mentionQueueService.pushToQueue(reminderInstruction);
-            bot.tweetAt(HandleUtil.prepareMessage(botMessages.getReminderCreateSuccess(),
-                            reminderInstruction.getUserName())
+            bot.tweetAt(
+                    HandleUtil.prepareMessageTime(
+                            HandleUtil.prepareMessageUser(botMessages.getReminderCreateSuccess(),
+                                    reminderInstruction.getUserName()), reminderInstruction.getReminderTime())
                     , HandleUtil.convertToHandle(reminderInstruction.getUserHandle()));
         } else {
-            bot.tweetAt(HandleUtil.prepareMessage(botMessages.getReminderCreateFailure(),
+            bot.tweetAt(HandleUtil.prepareMessageUser(botMessages.getReminderCreateFailure(),
                             reminderInstruction.getUserName())
                     , HandleUtil.convertToHandle(reminderInstruction.getUserHandle()));
         }
+
     }
 }

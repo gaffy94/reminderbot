@@ -31,7 +31,13 @@ public class MessageProcessor {
 
     private void extractInstruction(ReminderInstruction instruction, Status status) {
         instruction.setReminderText(extractReminder(status.getText()));
-        instruction.setReminderTime(convertToLocalDateTime(extractReminderTime(status.getText())));
+        try {
+            instruction.setReminderTime(convertToLocalDateTime(extractReminderTime(status.getText())));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            instruction.setValid(false);
+        }
+
     }
 
     private String extractReminderTime(String text) {

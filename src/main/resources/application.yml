@@ -1,3 +1,7 @@
+spring:
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 app:
   mention:
     queue: "mention_queue"
@@ -5,5 +9,5 @@ app:
     exchange: "mention_exchange"
 bot:
   messages:
-    reminderCreateSuccess: "Hey {user}, I created your reminder successfully!"
+    reminderCreateSuccess: "Hey {user}, I created your reminder successfully!. \n I'll remind you at {time}"
     reminderCreateFailure: "Hey {user}, I couldn't create your reminder,\n Check my Bio to see an example or DM me with 'Help' to get more info"
