@@ -1,0 +1,9 @@
+app:
+  mention:
+    queue: "mention_queue"
+    routeKey: "mention_routeKey"
+    exchange: "mention_exchange"
+bot:
+  messages:
+    reminderCreateSuccess: "Hey {user}, I created your reminder successfully!"
+    reminderCreateFailure: "Hey {user}, I couldn't create your reminder,\n Check my Bio to see an example or DM me with 'Help' to get more info"
