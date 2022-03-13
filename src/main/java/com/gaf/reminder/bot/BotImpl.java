@@ -3,6 +3,7 @@ package com.gaf.reminder.bot;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
@@ -41,7 +42,20 @@ public class BotImpl implements Bot {
     }
 
     @Override
-    public void quoteTweet() {
+    public void quoteTweet(String tweet, Status status) {
+        try {
+            log.info("Sending tweet {}", tweet);
+            StatusUpdate statusUpdate = new StatusUpdate(tweet);
+            statusUpdate.setInReplyToStatusId(status.getId());
+            Status tweeted = twitter.updateStatus(statusUpdate);
+            log.info("Tweet came back with id {}", tweeted.getId());
+        } catch (TwitterException e) {
+            log.error(e.getErrorMessage(), e);
+        }
+    }
+
+    @Override
+    public void replyTweet(String tweet, Status status) {
 
     }
 

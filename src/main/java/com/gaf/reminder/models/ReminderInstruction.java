@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ReminderInstruction {
     private long userId;
+    private long tweetId;
     private String userName;
     private String userHandle;
     private LocalDateTime reminderTime;

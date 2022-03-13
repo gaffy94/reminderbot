@@ -5,9 +5,11 @@ spring:
 app:
   mention:
     queue: "mention_queue"
-    routeKey: "mention_routeKey"
-    exchange: "mention_exchange"
+    group: "mention_group"
+    replicationFactor: 1
+    numPartitions: 1
+    bootStrapAddress: "localhost:29092,localhost:39092"
 bot:
   messages:
     reminderCreateSuccess: "Hey {user}, I created your reminder successfully!. \n I'll remind you at {time}"
-    reminderCreateFailure: "Hey {user}, I couldn't create your reminder,\n Check my Bio to see an example or DM me with 'Help' to get more info"
+    reminderCreateFailure: "Hey {user}, I couldn't create your reminder,\n Check my Bio to see an example or DM me with 'Help' to get more info. \n {time}"

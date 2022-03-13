@@ -21,6 +21,7 @@ public class MessageProcessor {
                 .userId(status.getUser().getId())
                 .userHandle(HandleUtil.convertToHandle(status.getUser().getScreenName()))
                 .userName(status.getUser().getName())
+                .tweetId(status.getId())
                 .isValid(isValidRequest(status.getText()))
                 .build();
         if (instruction.isValid()) {
