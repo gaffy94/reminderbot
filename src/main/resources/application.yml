@@ -2,14 +2,46 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+  datasource:
+    jdbc-url: "jdbc:postgresql://localhost:5432/reminder"
+    username: "reminder"
+    password: "reminder"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+      platform: postgres
+    properties:
+      org:
+        quartz:
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
+            threadPriority: 5
+          jobStore:
+            isClustered: true
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            misfireThreshold: 60000
+            clusterCheckinInterval: 20000
+            tablePrefix: qrtz_
 app:
-  mention:
-    queue: "mention_queue"
-    group: "mention_group"
+  queue:
     replicationFactor: 1
     numPartitions: 1
     bootStrapAddress: "localhost:29092,localhost:39092"
+    mention:
+      queue: "mention_queue"
+      group: "mention_group"
+    reminder:
+      queue: "reminder_queue"
+      group: "reminder_group"
 bot:
   messages:
     reminderCreateSuccess: "Hey {user}, I created your reminder successfully!. \n I'll remind you at {time}"
     reminderCreateFailure: "Hey {user}, I couldn't create your reminder,\n Check my Bio to see an example or DM me with 'Help' to get more info. \n {time}"
+    reminder: "Hey {user}, here's your reminder {reminder}. \n {time}."

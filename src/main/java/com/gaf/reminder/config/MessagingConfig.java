@@ -3,6 +3,8 @@ package com.gaf.reminder.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gaf.reminder.properties.MentionQueueProperties;
+import com.gaf.reminder.properties.QueueProperties;
+import com.gaf.reminder.properties.ReminderQueueProperties;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -30,23 +32,35 @@ import java.util.Map;
 @Configuration
 public class MessagingConfig {
 
+    private final QueueProperties queueProperties;
     private final MentionQueueProperties mentionQueueProperties;
+    private final ReminderQueueProperties reminderQueueProperties;
 
-    public MessagingConfig(MentionQueueProperties mentionQueueProperties) {
+    public MessagingConfig(QueueProperties queueProperties,
+            MentionQueueProperties mentionQueueProperties,
+            ReminderQueueProperties reminderQueueProperties) {
+        this.queueProperties = queueProperties;
         this.mentionQueueProperties = mentionQueueProperties;
+        this.reminderQueueProperties = reminderQueueProperties;
     }
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, mentionQueueProperties.getBootStrapAddress());
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, queueProperties.getBootStrapAddress());
         return new KafkaAdmin(configs);
     }
 
     @Bean
     public NewTopic mentionTopic() {
-        return new NewTopic(mentionQueueProperties.getQueue(), mentionQueueProperties.getNumPartitions(),
-                mentionQueueProperties.getReplicationFactor());
+        return new NewTopic(mentionQueueProperties.getQueue(), queueProperties.getNumPartitions(),
+                queueProperties.getReplicationFactor());
+    }
+
+    @Bean
+    public NewTopic reminderTopic() {
+        return new NewTopic(reminderQueueProperties.getQueue(), queueProperties.getNumPartitions(),
+                queueProperties.getReplicationFactor());
     }
 
     @Bean
@@ -61,7 +75,7 @@ public class MessagingConfig {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                mentionQueueProperties.getBootStrapAddress());
+                queueProperties.getBootStrapAddress());
         configProps.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 LongSerializer.class);
@@ -81,7 +95,7 @@ public class MessagingConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                mentionQueueProperties.getBootStrapAddress());
+                queueProperties.getBootStrapAddress());
 //        props.put(
 //                ConsumerConfig.GROUP_ID_CONFIG,
 //                groupId);

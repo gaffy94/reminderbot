@@ -20,8 +20,12 @@ public class HandleUtil {
         return message.replace("{user}", user);
     }
 
+    public static String prepareMessageUser(String message, String user, String reminder) {
+        return message.replace("{user}", user).replace("{reminder}", reminder);
+    }
+
     public static String prepareMessageTime(String message, LocalDateTime time) {
         return message.replace("{time}", time.format(format));
     }
-    
+
 }

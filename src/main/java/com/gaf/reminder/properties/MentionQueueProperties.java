@@ -7,14 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConstructorBinding
-@ConfigurationProperties("app.mention")
+@ConfigurationProperties("app.queue.mention")
 @Getter
 @Setter
 @AllArgsConstructor
 public class MentionQueueProperties {
     private String queue;
-    private int numPartitions;
-    private short replicationFactor;
-    private String bootStrapAddress;
+    private String group;
 
 }
